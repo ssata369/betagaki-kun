@@ -1,0 +1,695 @@
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+background:#eef0f3;
+color:#333;
+}
+
+/* ==============================
+   toolbar
+============================== */
+
+.toolbar{
+height:56px;
+background:#1f2430;
+color:#fff;
+display:flex;
+align-items:center;
+padding:0 20px;
+gap:24px;
+}
+
+.toolbar h1{
+font-size:18px;
+margin:0;
+letter-spacing:1px;
+}
+
+.toolbar-buttons{
+display:flex;
+gap:16px;
+align-items:center;
+margin-left:auto;
+}
+
+.toolbar-group{
+display:flex;
+gap:6px;
+align-items:center;
+}
+
+.toolbar-group + .toolbar-group{
+border-left:1px solid #3a4152;
+padding-left:16px;
+}
+
+button{
+cursor:pointer;
+padding:8px 14px;
+border:1px solid #ccc;
+background:#fff;
+border-radius:4px;
+font-size:13px;
+transition:.15s;
+}
+
+button:hover{
+opacity:.85;
+}
+
+button:disabled{
+opacity:.35;
+cursor:default;
+}
+
+button.primary{
+background:#2f6fed;
+border-color:#2f6fed;
+color:#fff;
+font-weight:bold;
+}
+
+button.danger{
+background:#fff;
+border-color:#d9534f;
+color:#d9534f;
+}
+
+button.active{
+background:#2f6fed;
+border-color:#2f6fed;
+color:#fff;
+}
+
+/* ==============================
+   layout
+============================== */
+
+.main{
+display:flex;
+height:calc(100vh - 56px);
+}
+
+/* ==============================
+   sidebar
+============================== */
+
+.sidebar{
+width:230px;
+background:#fff;
+border-right:1px solid #ddd;
+padding:15px;
+overflow:auto;
+}
+
+.sidebar h3{
+margin:16px 0 8px;
+font-size:13px;
+color:#666;
+}
+
+.sidebar h3:first-child{
+margin-top:0;
+}
+
+.part-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:6px;
+}
+
+.part{
+margin:0;
+padding:12px 4px;
+font-size:12px;
+text-align:center;
+cursor:grab;
+background:#f7f8fa;
+border:1px solid #e0e3e8;
+}
+
+.part:hover{
+background:#eaf1ff;
+border-color:#2f6fed;
+opacity:1;
+}
+
+.part:active{
+cursor:grabbing;
+}
+
+.pattern{
+margin:0;
+padding:12px 4px;
+font-size:12px;
+text-align:center;
+cursor:pointer;
+background:#fff6ec;
+border:1px solid #ecd9bd;
+}
+
+.pattern:hover{
+background:#ffedd6;
+border-color:#e0a44e;
+opacity:1;
+}
+
+.sidebar-hint{
+font-size:11px;
+color:#999;
+line-height:1.6;
+margin-top:14px;
+}
+
+/* ==============================
+   workspace / canvas
+============================== */
+
+.workspace{
+flex:1;
+display:flex;
+justify-content:center;
+align-items:flex-start;
+padding:30px;
+overflow:auto;
+}
+
+#canvas{
+background:#fff;
+min-height:1000px;
+transition:width .3s;
+box-shadow:0 2px 14px rgba(0,0,0,.12);
+}
+
+#canvas.preview-pc{
+width:1000px;
+}
+
+#canvas.preview-tablet{
+width:768px;
+}
+
+#canvas.preview-mobile{
+width:375px;
+}
+
+.pf-canvas-empty{
+padding:120px 30px;
+text-align:center;
+color:#aaa;
+line-height:2.2;
+font-size:14px;
+}
+
+/* ==============================
+   section
+============================== */
+
+.pf-section{
+width:100%;
+position:relative;
+display:flex;
+flex-wrap:wrap;
+align-items:stretch;
+}
+
+.pf-section:empty{
+min-height:60px;
+border:2px dashed #ccc;
+}
+
+.pf-section.selected-section{
+outline:2px dashed #2f6fed;
+outline-offset:-2px;
+}
+
+.pf-section.drag-over-section{
+outline:2px solid #2f6fed;
+outline-offset:-2px;
+background:#f4f8ff;
+}
+
+/* ==============================
+   block
+============================== */
+
+.pf-block{
+position:relative;
+min-height:20px;
+cursor:move;
+transition:outline .15s;
+flex:0 0 100%;
+max-width:100%;
+box-sizing:border-box;
+}
+
+.pf-block:not(.selected):hover{
+outline:1px dashed #9db9f0;
+outline-offset:1px;
+}
+
+.pf-block.selected{
+outline:3px solid #2f6fed;
+outline-offset:1px;
+}
+
+.pf-block.drag-over{
+outline:3px dashed #2f6fed;
+outline-offset:-2px;
+background:#f4f8ff;
+}
+
+.pf-block.dragging{
+opacity:.5;
+}
+
+.pf-block img{
+max-width:100%;
+height:auto;
+}
+
+.pf-image-placeholder{
+padding:40px 20px;
+background:#f0f2f5;
+color:#999;
+text-align:center;
+border:1px dashed #ccc;
+font-size:13px;
+}
+
+/* ==============================
+   component style（キャンバス上の見た目）
+============================== */
+
+.hero-block h1{
+margin:0 0 12px;
+font-size:34px;
+line-height:1.4;
+}
+
+.hero-block p{
+margin:0;
+line-height:1.8;
+}
+
+.heading-block{
+margin:0;
+line-height:1.5;
+font-size:inherit;
+}
+
+.text-block{
+margin:0;
+line-height:1.9;
+}
+
+.pf-button{
+display:inline-block;
+padding:14px 48px;
+background:#333;
+color:#fff;
+text-decoration:none;
+border-radius:4px;
+font-weight:bold;
+}
+
+.product-card{
+border:1px solid #ddd;
+border-radius:6px;
+padding:20px;
+background:#fff;
+}
+
+.product-card h3{
+margin:12px 0 8px;
+font-size:18px;
+}
+
+.product-card p{
+margin:0 0 8px;
+line-height:1.7;
+}
+
+.product-price{
+font-size:22px;
+font-weight:bold;
+color:#c0392b;
+}
+
+.product-quantity{
+font-size:13px;
+color:#666;
+}
+
+.price-block span{
+font-size:1.6em;
+font-weight:bold;
+}
+
+.review-stars{
+color:#f5a623;
+font-size:18px;
+letter-spacing:2px;
+}
+
+.review-block p{
+margin:6px 0 0;
+line-height:1.8;
+}
+
+.producer-block h3,
+.notice-block h3,
+.shipping-block h3{
+margin:0 0 8px;
+font-size:16px;
+border-left:4px solid #333;
+padding-left:8px;
+}
+
+.producer-block p,
+.notice-block p,
+.shipping-block p{
+margin:0;
+line-height:1.8;
+}
+
+.badge-block{
+font-weight:bold;
+letter-spacing:1px;
+line-height:1;
+}
+
+.banner-item img{
+width:100%;
+height:auto;
+display:block;
+}
+
+.banner-caption{
+margin:6px 0 0;
+font-size:13px;
+line-height:1.5;
+}
+
+.banner-price{
+margin:4px 0 0;
+font-size:18px;
+font-weight:bold;
+color:#bf0000;
+}
+
+.media-block h3{
+margin:0 0 8px;
+font-size:18px;
+}
+
+.media-block p{
+margin:0;
+line-height:1.9;
+}
+
+.media-image img{
+width:100%;
+height:auto;
+display:block;
+}
+
+/* ==============================
+   property panel
+============================== */
+
+.property{
+width:300px;
+background:#fff;
+border-left:1px solid #ddd;
+padding:15px;
+overflow:auto;
+}
+
+.property h3{
+margin:0 0 10px;
+font-size:13px;
+color:#666;
+}
+
+.property h4{
+margin:4px 0 8px;
+font-size:12px;
+color:#888;
+}
+
+.property hr{
+border:none;
+border-top:1px solid #eee;
+margin:14px 0;
+}
+
+.property label{
+display:block;
+font-size:12px;
+color:#555;
+margin-bottom:4px;
+}
+
+.property input,
+.property textarea,
+.property select{
+width:100%;
+padding:8px;
+margin-bottom:10px;
+border:1px solid #ccc;
+border-radius:4px;
+font-size:13px;
+}
+
+.property textarea{
+min-height:70px;
+resize:vertical;
+}
+
+.prop-header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:12px;
+}
+
+.prop-type{
+font-weight:bold;
+font-size:14px;
+}
+
+.prop-actions{
+display:flex;
+gap:6px;
+}
+
+.prop-actions button{
+padding:5px 10px;
+font-size:12px;
+}
+
+.panel-hint{
+font-size:11px;
+color:#999;
+line-height:1.6;
+margin:0 0 10px;
+}
+
+.prop-item{
+border:1px solid #e4e7ec;
+border-radius:4px;
+padding:10px;
+margin-bottom:10px;
+background:#fafbfc;
+}
+
+.prop-item-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:8px;
+font-size:12px;
+color:#666;
+font-weight:bold;
+}
+
+.prop-item-header button{
+padding:3px 8px;
+font-size:11px;
+}
+
+#propAddItem{
+width:100%;
+margin-bottom:4px;
+}
+
+/* section control */
+
+#btnAddSection,
+#btnDuplicateSection,
+#btnMoveSectionUp,
+#btnMoveSectionDown,
+#btnDeleteSection{
+width:100%;
+margin-bottom:6px;
+}
+
+/* ==============================
+   toast
+============================== */
+
+#pfToast{
+position:fixed;
+left:50%;
+bottom:32px;
+transform:translateX(-50%) translateY(20px);
+background:#1f2430;
+color:#fff;
+padding:10px 24px;
+border-radius:20px;
+font-size:13px;
+opacity:0;
+pointer-events:none;
+transition:.25s;
+z-index:1000;
+}
+
+#pfToast.show{
+opacity:1;
+transform:translateX(-50%) translateY(0);
+}
+
+/* ==============================
+   export dialog
+============================== */
+
+#pfExportOverlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.5);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:900;
+}
+
+.pf-dialog{
+background:#fff;
+width:680px;
+max-width:92vw;
+max-height:86vh;
+border-radius:8px;
+padding:22px;
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.pf-dialog h3{
+margin:0;
+font-size:16px;
+}
+
+.pf-mode-toggle{
+display:flex;
+gap:0;
+}
+
+.pf-mode-toggle button{
+flex:1;
+border-radius:0;
+border-color:#c9ced6;
+background:#f2f4f7;
+color:#555;
+}
+
+.pf-mode-toggle button:first-child{
+border-radius:4px 0 0 4px;
+}
+
+.pf-mode-toggle button:last-child{
+border-radius:0 4px 4px 0;
+border-left:none;
+}
+
+.pf-mode-toggle button.active{
+background:#2f6fed;
+border-color:#2f6fed;
+color:#fff;
+font-weight:bold;
+}
+
+.pf-dialog-note{
+margin:0;
+font-size:12px;
+color:#666;
+line-height:1.7;
+}
+
+#pfExportWarning{
+display:none;
+font-size:12px;
+color:#a94442;
+background:#fdf3f2;
+border:1px solid #eccfcd;
+border-radius:4px;
+padding:8px 12px;
+line-height:1.6;
+}
+
+#pfExportCode{
+width:100%;
+height:300px;
+font-family:Consolas,Monaco,monospace;
+font-size:12px;
+border:1px solid #ccc;
+border-radius:4px;
+padding:10px;
+resize:vertical;
+white-space:pre;
+}
+
+.pf-dialog-buttons{
+display:flex;
+justify-content:flex-end;
+gap:8px;
+}
+
+/* ==============================
+   responsive（エディタ自体）
+============================== */
+
+@media(max-width:1024px){
+
+.sidebar{
+width:180px;
+}
+
+.property{
+width:260px;
+}
+
+}
+
+@media(max-width:768px){
+
+.toolbar{
+height:auto;
+flex-wrap:wrap;
+padding:10px;
+}
+
+.sidebar{
+display:none;
+}
+
+.property{
+display:none;
+}
+
+}

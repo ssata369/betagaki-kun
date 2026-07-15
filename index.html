@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ベタガキ君</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<header class="toolbar">
+
+<h1>ベタガキ君</h1>
+
+<div class="toolbar-buttons">
+
+<div class="toolbar-group">
+<button id="btnSave" title="プロジェクトをファイルに保存 (Ctrl+S)">保存</button>
+<button id="btnLoad" title="プロジェクトファイルを読込">読込</button>
+<button id="btnClearAll" class="danger" title="すべてのパーツを削除して初期化">全削除</button>
+</div>
+
+<div class="toolbar-group">
+<button id="btnExportCode" class="primary" title="CMSに貼り付けられるコードを出力">コード出力</button>
+<button id="btnExportHtml" title="単体で動くHTMLファイルを出力">HTML出力</button>
+</div>
+
+<div class="toolbar-group">
+<button id="btnUndo" title="元に戻す (Ctrl+Z)">↶ 戻る</button>
+<button id="btnRedo" title="やり直す (Ctrl+Y)">↷ 進む</button>
+</div>
+
+<div class="toolbar-group">
+<button id="devicePC">PC</button>
+<button id="deviceTablet">Tablet</button>
+<button id="deviceMobile">Mobile</button>
+</div>
+
+</div>
+
+</header>
+
+<div class="main">
+
+<aside class="sidebar">
+
+<h3>レイアウトパターン</h3>
+
+<div class="part-grid">
+
+<button class="pattern" data-pattern="ranking">ランキング</button>
+
+<button class="pattern" data-pattern="bannerFeature">バナー特集</button>
+
+<button class="pattern" data-pattern="mediaShowcase">商品紹介(左右)</button>
+
+</div>
+
+<h3>基本パーツ</h3>
+
+<div class="part-grid">
+
+<button class="part" data-type="hero">ヒーロー</button>
+
+<button class="part" data-type="heading">見出し</button>
+
+<button class="part" data-type="text">テキスト</button>
+
+<button class="part" data-type="image">画像</button>
+
+<button class="part" data-type="button">ボタン</button>
+
+<button class="part" data-type="media">画像＋テキスト</button>
+
+</div>
+
+<h3>LP・ECパーツ</h3>
+
+<div class="part-grid">
+
+<button class="part" data-type="bannerGrid">バナー一覧</button>
+
+<button class="part" data-type="product">商品カード</button>
+
+<button class="part" data-type="price">価格</button>
+
+<button class="part" data-type="review">レビュー</button>
+
+<button class="part" data-type="badge">バッジ</button>
+
+<button class="part" data-type="notice">注意事項</button>
+
+<button class="part" data-type="shipping">配送情報</button>
+
+<button class="part" data-type="producer">生産者紹介</button>
+
+</div>
+
+<p class="sidebar-hint">クリックで追加、またはキャンバスへドラッグ＆ドロップ</p>
+
+</aside>
+
+<main class="workspace">
+
+<div id="canvas">
+
+</div>
+
+</main>
+
+<aside class="property">
+
+<h3>プロパティ</h3>
+
+<div id="propertyPanel">
+
+パーツを選択してください
+
+</div>
+
+<hr>
+
+<h3>セクション管理</h3>
+
+<button id="btnAddSection">＋追加</button>
+
+<button id="btnDuplicateSection">複製</button>
+
+<button id="btnMoveSectionUp">↑上へ</button>
+
+<button id="btnMoveSectionDown">↓下へ</button>
+
+<button id="btnDeleteSection">削除</button>
+
+<hr>
+
+<div id="responsiveSetting">
+
+</div>
+
+<hr>
+
+<h3>ページ設定</h3>
+
+<div id="pageSetting">
+
+</div>
+
+</aside>
+
+</div>
+
+<script src="js/state.js"></script>
+
+<script src="js/utils.js"></script>
+
+<script src="js/section.js"></script>
+
+<script src="js/sidebar.js"></script>
+
+<script src="js/render.js"></script>
+
+<script src="js/property.js"></script>
+
+<script src="js/drag.js"></script>
+
+<script src="js/patterns.js"></script>
+
+<script src="js/device.js"></script>
+
+<script src="js/template.js"></script>
+
+<script src="js/responsiveEditor.js"></script>
+
+<script src="js/preview.js"></script>
+
+<script src="js/imageManager.js"></script>
+
+<script src="js/history.js"></script>
+
+<script src="js/autosave.js"></script>
+
+<script src="js/project.js"></script>
+
+<script src="js/seo.js"></script>
+
+<script src="js/exporter.js"></script>
+
+<script src="app.js"></script>
+
+</body>
+
+</html>

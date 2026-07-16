@@ -1,6 +1,10 @@
 # スクリプト自身の場所（.claude）の親フォルダをルートにする。
 # フォルダ名を変えてもこのまま動作する。
-$root = Split-Path $PSScriptRoot -Parent
+# 環境によって $PSScriptRoot が空になる場合があるためフォールバックする。
+$scriptDir = $PSScriptRoot
+if (-not $scriptDir) { $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition }
+$root = Split-Path $scriptDir -Parent
+if (-not $root) { throw "root path could not be resolved" }
 $listener = New-Object System.Net.HttpListener
 $listener.Prefixes.Add("http://localhost:8420/")
 $listener.Start()

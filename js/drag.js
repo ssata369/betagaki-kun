@@ -60,6 +60,8 @@ const BLOCK_DEFAULTS = {
         description:"商品説明をここに入力します。",
         price:"9,800円(税込)",
         quantity:"内容量：1個",
+        image:"",
+        link:"",
         padding:"24px"
     },
 
@@ -107,6 +109,7 @@ const BLOCK_DEFAULTS = {
         gap:"12",
         layout:"grid",
         showRank:"none",
+        ratio:"auto",
         items:[
             { image:"", link:"", caption:"", price:"" },
             { image:"", link:"", caption:"", price:"" },

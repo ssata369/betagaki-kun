@@ -9,6 +9,11 @@ const FONT_FAMILY = "'Hiragino Kaku Gothic ProN','Hiragino Sans','Noto Sans JP',
     - "inline"     : 各要素に style 属性でべた書き
     - "stylesheet" : すべてのスタイルを <style> タグ内の class に集約
                      （同一スタイルは 1 クラスに集約して再利用・容量削減）
+
+    ※どちらの方式でも、モバイル対応（メディアクエリ）のための
+      小さな <style> ブロックは必ず出力に含まれる。
+      インラインの style 属性ではモバイル時のレイアウト変更が
+      表現できないため（PC縮小表示の防止に必須）。
 */
 
 let currentMode = "inline";
@@ -67,12 +72,27 @@ function resetStyles(){
 
 function sAttr(styleString){
 
+    return cAttr("",styleString);
+
+}
+
+/*
+    固定クラス（レスポンシブ制御用など）とスタイルを合成して
+    属性文字列を返す。
+*/
+
+function cAttr(fixedClasses,styleString){
+
     if(!styleString){
-        return "";
+        return fixedClasses ? ` class="${fixedClasses}"` : "";
     }
 
     if(mode === "inline"){
-        return ` style="${styleString}"`;
+
+        const cls = fixedClasses ? ` class="${fixedClasses}"` : "";
+
+        return `${cls} style="${styleString}"`;
+
     }
 
     let cls = innerMap[styleString];
@@ -83,7 +103,9 @@ function sAttr(styleString){
         innerList.push([cls,styleString]);
     }
 
-    return ` class="${cls}"`;
+    const all = fixedClasses ? fixedClasses + " " + cls : cls;
+
+    return ` class="${all}"`;
 
 }
 
@@ -99,8 +121,6 @@ function buildCss(){
         css += "." + rule[0] + "{" + rule[1] + "}\n";
     });
 
-    css += generateResponsiveCSS();
-
     return css;
 
 }
@@ -112,12 +132,12 @@ function buildCss(){
 function generateBodyHTML(){
 
     const containerStyle =
-        `width:100%;box-sizing:border-box;margin:0 auto;font-family:${FONT_FAMILY};color:#333333;line-height:1.7;`;
+        `width:100%;max-width:1080px;box-sizing:border-box;margin:0 auto;font-family:${FONT_FAMILY};color:#333333;line-height:1.7;`;
 
     const rowStyle =
         "width:100%;display:flex;flex-wrap:wrap;align-items:stretch;";
 
-    let html = `<div${sAttr(containerStyle)}>\n`;
+    let html = `<div${cAttr("pf-page",containerStyle)}>\n`;
 
     let index = 0;
 
@@ -143,6 +163,16 @@ function generateBodyHTML(){
 
 }
 
+function widthClass(block){
+
+    if(!block.width){
+        return "";
+    }
+
+    return " pf-w-" + parseInt(block.width,10);
+
+}
+
 function generateBlockHTML(block,className){
 
     const inner = generateInnerHTML(block);
@@ -153,15 +183,17 @@ function generateBlockHTML(block,className){
 
     const wrapperStyle = blockWrapperStyle(block);
 
+    const classes = "pf-b " + className + widthClass(block);
+
     if(mode === "inline"){
-        return `<div class="${className}" style="${wrapperStyle}">\n${inner}\n</div>\n`;
+        return `<div class="${classes}" style="${wrapperStyle}">\n${inner}\n</div>\n`;
     }
 
     /* stylesheet モードでは wrapper スタイルを固有クラスに登録 */
 
     blockRules.push([className,wrapperStyle]);
 
-    return `<div class="${className}">\n${inner}\n</div>\n`;
+    return `<div class="${classes}">\n${inner}\n</div>\n`;
 
 }
 
@@ -170,7 +202,7 @@ function blockWrapperStyle(block){
     let style = "box-sizing:border-box;margin:0;";
 
     if(block.width){
-        style += `flex:0 1 ${block.width};min-width:140px;`;
+        style += `flex:0 1 ${block.width};max-width:${block.width};`;
     }else{
         style += "width:100%;";
     }
@@ -231,10 +263,10 @@ function generateInnerHTML(block){
                 return null;
             }
 
-            const imageTag = `<img src="${esc(resolveImageSrc(block.image))}" alt=""${sAttr("max-width:100%;height:auto;display:inline-block;")}>`;
+            const imageTag = `<img src="${esc(resolveImageSrc(block.image))}" alt=""${sAttr("width:100%;max-width:100%;height:auto;display:inline-block;")}>`;
 
             if(block.link){
-                return `<a href="${esc(block.link)}"${sAttr("display:inline-block;max-width:100%;")}>${imageTag}</a>`;
+                return `<a href="${esc(block.link)}"${sAttr("display:inline-block;width:100%;max-width:100%;")}>${imageTag}</a>`;
             }
 
             return imageTag;
@@ -243,16 +275,25 @@ function generateInnerHTML(block){
 
         case "button":
         case "cta":
-            return `<a href="${esc(block.link || "#")}"${sAttr(`display:inline-block;padding:14px 48px;background-color:${block.buttonBg || "#bf0000"};color:${block.buttonColor || "#ffffff"};text-decoration:none;border-radius:4px;font-weight:bold;`)}>${esc(block.text || block.title || "申し込みはこちら")}</a>`;
+            return `<a href="${esc(block.link || "#")}"${sAttr(`display:inline-block;margin:8px 0;padding:14px 48px;background-color:${block.buttonBg || "#bf0000"};color:${block.buttonColor || "#ffffff"};text-decoration:none;border-radius:4px;font-weight:bold;`)}>${esc(block.text || block.title || "申し込みはこちら")}</a>`;
 
-        case "product":
-            return `<div${sAttr("border:1px solid #dddddd;border-radius:6px;padding:20px;background-color:#ffffff;color:#333333;")}>` +
-                (block.image ? `\n<img src="${esc(resolveImageSrc(block.image))}" alt=""${sAttr("max-width:100%;height:auto;")}>` : "") +
-                `\n<h3${sAttr("margin:12px 0 8px 0;font-size:18px;color:inherit;font-weight:bold;")}>${esc(block.productName || block.title || "")}</h3>` +
-                `\n<p${sAttr("margin:0 0 8px 0;line-height:1.7;color:inherit;")}>${esc(block.description || "")}</p>` +
-                `\n<div${sAttr("font-size:22px;font-weight:bold;color:#c0392b;")}>${esc(block.price || "")}</div>` +
-                (block.quantity ? `\n<div${sAttr("font-size:13px;color:#666666;")}>${esc(block.quantity)}</div>` : "") +
+        case "product":{
+
+            const card = `<div${sAttr("border:1px solid #dddddd;border-radius:6px;padding:16px;background-color:#ffffff;color:#333333;height:100%;")}>` +
+                (block.image ? `\n<img src="${esc(resolveImageSrc(block.image))}" alt="${esc(block.productName || "")}"${sAttr("width:100%;height:auto;display:block;")}>` : "") +
+                `\n<h3${sAttr("margin:12px 0 8px 0;font-size:16px;line-height:1.5;color:inherit;font-weight:bold;")}>${esc(block.productName || block.title || "")}</h3>` +
+                (block.description ? `\n<p${sAttr("margin:0 0 8px 0;font-size:13px;line-height:1.7;color:inherit;")}>${esc(block.description)}</p>` : "") +
+                `\n<div${cAttr("pf-price","font-size:20px;font-weight:bold;color:#bf0000;")}>${esc(block.price || "")}</div>` +
+                (block.quantity ? `\n<div${sAttr("font-size:12px;color:#666666;")}>${esc(block.quantity)}</div>` : "") +
                 `\n</div>`;
+
+            if(block.link){
+                return `<a href="${esc(block.link)}"${sAttr("display:block;text-decoration:none;color:inherit;")}>${card}</a>`;
+            }
+
+            return card;
+
+        }
 
         case "price":
             return `<span${sAttr("font-size:1.6em;font-weight:bold;")}>${esc(block.amount || "")}</span>${esc(block.unit || "円")}`;
@@ -330,6 +371,24 @@ function rankColor(rank){
 
 }
 
+function ratioStyle(block){
+
+    if(block.ratio === "1-1"){
+        return "aspect-ratio:1/1;object-fit:cover;";
+    }
+
+    if(block.ratio === "4-3"){
+        return "aspect-ratio:4/3;object-fit:cover;";
+    }
+
+    if(block.ratio === "16-9"){
+        return "aspect-ratio:16/9;object-fit:cover;";
+    }
+
+    return "";
+
+}
+
 function mediaHTML(block){
 
     const direction = block.imagePosition === "right" ? "row-reverse" : "row";
@@ -377,41 +436,43 @@ function bannerGridHTML(block){
     const showRank = block.showRank === "show";
 
     /*
-        均等グリッド:
-        flex-grow を 0 にして最終行のカードが拡大しないようにする。
-        basis は「100%/列数 - (列数-1)/列数 * gap」で厳密に算出する。
+        CSS Grid を使用:
+        - repeat(N,1fr) により、コンテナ幅に関係なく必ず N 列に収まる
+          （flex の basis 計算誤差による意図しない折り返しが発生しない）
+        - モバイルでは同梱の <style> のメディアクエリで 2 列に組み替わる
     */
 
-    const colBasis =
-        "calc(" + (100 / columns).toFixed(4) + "% - " +
-        (gap * (columns - 1) / columns).toFixed(2) + "px)";
+    let html = `<div${cAttr("pf-grid",`display:grid;grid-template-columns:repeat(${columns},1fr);gap:${gap}px;`)}>`;
 
-    let html = `<div${sAttr(`display:flex;flex-wrap:wrap;gap:${gap}px;`)}>`;
+    const imgStyle = "width:100%;height:auto;display:block;" + ratioStyle(block);
 
     items.forEach((item,index)=>{
 
-        const flexStyle = (feature && index === 0)
-            ? "flex:0 0 100%;max-width:100%;box-sizing:border-box;position:relative;"
-            : `flex:0 0 ${colBasis};max-width:${colBasis};box-sizing:border-box;position:relative;`;
+        const isFeature = feature && index === 0;
+
+        const cellClasses = isFeature ? "pf-cell pf-grid-feature" : "pf-cell";
+
+        const cellStyle = "position:relative;min-width:0;" +
+            (isFeature ? "grid-column:1 / -1;" : "");
 
         const rankBadge = showRank
             ? `<span${sAttr(`position:absolute;top:0;left:0;background-color:${rankColor(index + 1)};color:#ffffff;font-size:13px;font-weight:bold;padding:4px 10px;z-index:1;`)}>${index + 1}位</span>`
             : "";
 
-        const imageTag = `<img src="${esc(resolveImageSrc(item.image))}" alt="${esc(item.caption || "")}"${sAttr("width:100%;height:auto;display:block;")}>`;
+        const imageTag = `<img src="${esc(resolveImageSrc(item.image))}" alt="${esc(item.caption || "")}"${sAttr(imgStyle)}>`;
 
         const caption = item.caption
-            ? `\n<p${sAttr("margin:6px 0 0 0;font-size:13px;line-height:1.5;color:inherit;")}>${esc(item.caption)}</p>`
+            ? `\n<p${sAttr("margin:6px 0 0 0;font-size:13px;line-height:1.6;color:inherit;")}>${esc(item.caption)}</p>`
             : "";
 
         const price = item.price
-            ? `\n<p${sAttr("margin:4px 0 0 0;font-size:18px;font-weight:bold;color:#bf0000;")}>${esc(item.price)}</p>`
+            ? `\n<p${cAttr("pf-price","margin:4px 0 0 0;font-size:18px;font-weight:bold;color:#bf0000;")}>${esc(item.price)}</p>`
             : "";
 
         if(item.link){
-            html += `\n<a href="${esc(item.link)}"${sAttr(flexStyle + "display:block;text-decoration:none;color:inherit;")}>${rankBadge}${imageTag}${caption}${price}</a>`;
+            html += `\n<a href="${esc(item.link)}"${cAttr(cellClasses,cellStyle + "display:block;text-decoration:none;color:inherit;")}>${rankBadge}${imageTag}${caption}${price}</a>`;
         }else{
-            html += `\n<div${sAttr(flexStyle)}>${rankBadge}${imageTag}${caption}${price}</div>`;
+            html += `\n<div${cAttr(cellClasses,cellStyle)}>${rankBadge}${imageTag}${caption}${price}</div>`;
         }
 
     });
@@ -471,6 +532,29 @@ function resolveImageSrc(src){
 }
 
 /* ==============================
+   レスポンシブCSS（常に出力に同梱）
+   - モバイル(767px以下)でグリッドを2列化
+   - 幅指定パーツを 2列 or 全幅に組み替え
+   - 余白・文字サイズをモバイル向けに調整
+============================== */
+
+function baseResponsiveCSS(){
+
+    return `.pf-page img{max-width:100%;}
+@media(max-width:767px){
+.pf-b{padding-left:16px !important;padding-right:16px !important;}
+.pf-page h1{font-size:26px !important;}
+.pf-grid{grid-template-columns:repeat(2,1fr) !important;}
+.pf-grid-feature{grid-column:1 / -1 !important;}
+.pf-w-25,.pf-w-33,.pf-w-50{flex-basis:50% !important;max-width:50% !important;}
+.pf-w-66,.pf-w-75{flex-basis:100% !important;max-width:100% !important;}
+.pf-price{font-size:15px !important;}
+}
+`;
+
+}
+
+/* ==============================
    スニペット / 単体HTML
 ============================== */
 
@@ -482,16 +566,17 @@ function generateInlineSnippet(){
 
     const body = generateBodyHTML();
 
+    let css = "";
+
     if(mode === "stylesheet"){
-
-        return "<!-- ベタガキ君で作成 -->\n<style>\n" +
-            buildCss() +
-            "</style>\n" +
-            body;
-
+        css += buildCss();
     }
 
-    return "<!-- ベタガキ君で作成 -->\n" + body;
+    css += baseResponsiveCSS();
+
+    css += generateResponsiveCSS();
+
+    return "<!-- ベタガキ君で作成 -->\n<style>\n" + css + "</style>\n" + body;
 
 }
 
@@ -505,9 +590,15 @@ function generateStandaloneHTML(){
 
     const body = generateBodyHTML();
 
-    const css = (mode === "stylesheet")
-        ? buildCss()
-        : generateResponsiveCSS();
+    let css = "";
+
+    if(mode === "stylesheet"){
+        css += buildCss();
+    }
+
+    css += baseResponsiveCSS();
+
+    css += generateResponsiveCSS();
 
     return `<!DOCTYPE html>
 <html lang="ja">
@@ -679,7 +770,7 @@ function ensureDialog(){
 
 <p class="pf-dialog-note">
 以下のコードをコピーして、CMSのHTML編集欄にそのまま貼り付けてください。<br>
-「べた書き」は各要素にstyleを直接記述、「styleタグ集約」は共通スタイルをまとめて再利用し容量を削減します。
+※スマホ対応（2列表示への組み替え等）のため、どちらの方式でも先頭に小さな&lt;style&gt;タグが含まれます。
 </p>
 
 <div id="pfExportWarning">

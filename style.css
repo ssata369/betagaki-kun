@@ -197,6 +197,42 @@ width:768px;
 width:375px;
 }
 
+/* ==============================
+   モバイルプレビュー・シミュレーション
+   （出力コードに同梱されるメディアクエリと同じ挙動を
+     キャンバス上で再現する。メディアクエリはビューポート
+     基準のためキャンバス幅では発火しない）
+============================== */
+
+#canvas.preview-mobile .banner-grid{
+grid-template-columns:repeat(2,1fr) !important;
+}
+
+#canvas.preview-mobile .banner-item.feature{
+grid-column:1 / -1 !important;
+}
+
+#canvas.preview-mobile .pf-block[data-w="25"],
+#canvas.preview-mobile .pf-block[data-w="33"],
+#canvas.preview-mobile .pf-block[data-w="50"]{
+flex:0 1 50% !important;
+max-width:50% !important;
+}
+
+#canvas.preview-mobile .pf-block[data-w="66"],
+#canvas.preview-mobile .pf-block[data-w="75"]{
+flex:0 1 100% !important;
+max-width:100% !important;
+}
+
+#canvas.preview-mobile .hero-block h1{
+font-size:26px;
+}
+
+#canvas.preview-mobile .banner-price{
+font-size:15px;
+}
+
 .pf-canvas-empty{
 padding:120px 30px;
 text-align:center;

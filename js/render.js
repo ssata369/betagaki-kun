@@ -317,32 +317,34 @@ function generateBannerGrid(block){
     const showRank = block.showRank === "show";
 
     /*
-        均等グリッド:
-        各カードを厳密に同じ幅にし、最終行でも拡大しないよう
-        flex-grow を 0 にする（flex:0 0 basis）。
-        basis は「100%/列数 - (列数-1)/列数 * gap」で正確に算出する。
+        CSS Grid を使用:
+        repeat(N,1fr) により、コンテナ幅に関係なく必ず N 列に収まる
+        （flex の basis 計算誤差による意図しない折り返しが発生しない）。
+        モバイルプレビュー時は style.css 側の
+        「#canvas.preview-mobile .banner-grid」で 2 列に組み替わる。
     */
 
-    const colBasis =
-        "calc(" + (100 / columns).toFixed(4) + "% - " +
-        (gap * (columns - 1) / columns).toFixed(2) + "px)";
+    const imgRatio = ratioStyle(block);
 
-    let html = `<div class="banner-grid" style="display:flex;flex-wrap:wrap;gap:${gap}px;">`;
+    let html = `<div class="banner-grid" style="display:grid;grid-template-columns:repeat(${columns},1fr);gap:${gap}px;">`;
 
     items.forEach((item,index)=>{
 
-        const flexStyle = (feature && index === 0)
-            ? "flex:0 0 100%;max-width:100%;"
-            : `flex:0 0 ${colBasis};max-width:${colBasis};`;
+        const isFeature = feature && index === 0;
 
-        html += `<div class="banner-item" style="${flexStyle}position:relative;">`;
+        const cellClass = isFeature ? "banner-item feature" : "banner-item";
+
+        const cellStyle = "position:relative;min-width:0;" +
+            (isFeature ? "grid-column:1 / -1;" : "");
+
+        html += `<div class="${cellClass}" style="${cellStyle}">`;
 
         if(showRank){
             html += `<span style="position:absolute;top:0;left:0;background-color:${rankColor(index + 1)};color:#ffffff;font-size:13px;font-weight:bold;padding:4px 10px;z-index:1;">${index + 1}位</span>`;
         }
 
         if(item.image){
-            html += `<img src="${escapeHtml(item.image)}">`;
+            html += `<img src="${escapeHtml(item.image)}"${imgRatio ? ` style="${escapeHtml(imgRatio)}"` : ""}>`;
         }else{
             html += `<div class="pf-image-placeholder">画像URL未設定</div>`;
         }
@@ -362,6 +364,24 @@ function generateBannerGrid(block){
     html += `</div>`;
 
     return html;
+
+}
+
+function ratioStyle(block){
+
+    if(block.ratio === "1-1"){
+        return "aspect-ratio:1/1;object-fit:cover;";
+    }
+
+    if(block.ratio === "4-3"){
+        return "aspect-ratio:4/3;object-fit:cover;";
+    }
+
+    if(block.ratio === "16-9"){
+        return "aspect-ratio:16/9;object-fit:cover;";
+    }
+
+    return "";
 
 }
 
@@ -402,9 +422,9 @@ function buildStars(rating){
 function applyStyle(element,block){
 
     if(block.width){
-        element.style.flex = "1 1 " + block.width;
-        element.style.maxWidth = "none";
-        element.style.minWidth = "140px";
+        element.style.flex = "0 1 " + block.width;
+        element.style.maxWidth = block.width;
+        element.dataset.w = parseInt(block.width,10);
     }
 
     if(block.color){

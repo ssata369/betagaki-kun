@@ -85,7 +85,8 @@ const TYPE_FIELDS = {
         ["description","商品説明","textarea"],
         ["price","価格表示","text"],
         ["quantity","内容量","text"],
-        ["image","画像URL","url"]
+        ["image","画像URL","url"],
+        ["link","リンクURL（遷移先）","url"]
     ],
 
     price:[
@@ -124,6 +125,12 @@ const TYPE_FIELDS = {
         ["showRank","順位バッジ","select",[
             ["none","表示しない"],
             ["show","表示する（1位〜）"]
+        ]],
+        ["ratio","画像の縦横比","select",[
+            ["auto","そのまま"],
+            ["1-1","正方形（1:1）"],
+            ["4-3","4:3"],
+            ["16-9","16:9"]
         ]]
     ]
 

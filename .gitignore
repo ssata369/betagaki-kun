@@ -10,3 +10,6 @@ desktop.ini
 .vscode/
 *.swp
 *~
+
+# 動作検証用の模擬CMSページ（ローカル専用）
+.claude/mock-*.html

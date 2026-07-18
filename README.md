@@ -61,3 +61,14 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\.claude\serve.ps1
    ├─ responsiveEditor.js / device.js / preview.js … レスポンシブ
    ├─ imageManager.js / seo.js / template.js / utils.js
 ```
+
+## ライセンス・著作権
+
+本ソフトウェアは、作者（ssata369）が業務時間外に個人所有の機材および
+個人契約のサービスを用いて開発した**個人著作物**です。
+
+Copyright (c) 2026 ssata369 — All rights reserved.
+
+無断での複製・改変・再配布・商用利用はできません。
+利用条件の詳細は [LICENSE](LICENSE) を参照してください。
+組織内での業務利用をご希望の場合は、作者までご相談ください。

@@ -442,9 +442,9 @@ function bannerGridHTML(block){
         - モバイルでは同梱の <style> のメディアクエリで 2 列に組み替わる
     */
 
-    let html = `<div${cAttr("pf-grid",`display:grid;grid-template-columns:repeat(${columns},1fr);gap:${gap}px;`)}>`;
+    let html = `<div${cAttr("pf-grid",`display:grid;grid-template-columns:repeat(${columns},minmax(0,1fr));gap:${gap}px;`)}>`;
 
-    const imgStyle = "width:100%;height:auto;display:block;" + ratioStyle(block);
+    const imgStyle = "width:100%;max-width:100%;height:auto;display:block;" + ratioStyle(block);
 
     items.forEach((item,index)=>{
 
@@ -540,17 +540,52 @@ function resolveImageSrc(src){
 
 function baseResponsiveCSS(){
 
-    return `.pf-page img{max-width:100%;}
+    /*
+        前半: CMSテーマのCSS汚染からの防御（.pf-page スコープのリセット）
+        - インラインstyleは常にこのリセットより優先されるため、
+          自前の装飾は影響を受けない
+        - 疑似要素（テーマの見出し装飾など）はインラインで消せないため
+          !important で無効化する
+        - グリッド/行の直下に CMS が <br> を注入しても崩れないよう
+          display:none で無害化する
+        後半: モバイル(767px以下)のレイアウト組み替え
+    */
+
+    return `.pf-page,.pf-page *{box-sizing:border-box;}
+.pf-page h1,.pf-page h2,.pf-page h3,.pf-page p{margin:0;padding:0;background:none;border:none;}
+.pf-page h1::before,.pf-page h1::after,.pf-page h2::before,.pf-page h2::after,.pf-page h3::before,.pf-page h3::after{content:none !important;}
+.pf-page img{max-width:100%;margin:0;border:none;}
+.pf-page a{text-decoration:none;}
+.pf-page>div>br,.pf-grid>br{display:none;}
 @media(max-width:767px){
 .pf-b{padding-left:16px !important;padding-right:16px !important;}
 .pf-page h1{font-size:26px !important;}
-.pf-grid{grid-template-columns:repeat(2,1fr) !important;}
+.pf-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}
 .pf-grid-feature{grid-column:1 / -1 !important;}
 .pf-w-25,.pf-w-33,.pf-w-50{flex-basis:50% !important;max-width:50% !important;}
 .pf-w-66,.pf-w-75{flex-basis:100% !important;max-width:100% !important;}
 .pf-price{font-size:15px !important;}
 }
 `;
+
+}
+
+/*
+    CMSの「改行→<br>自動変換」対策:
+    スニペットは改行を一切含まない1行で出力する。
+    （改行が残っていると、グリッドのセル間に <br> が注入されて
+      レイアウトが崩れ、<style> 内のCSSも破壊されるため）
+*/
+
+function compactCss(css){
+
+    return css.replace(/\n+/g,"");
+
+}
+
+function compactHtml(html){
+
+    return html.replace(/\n+/g," ");
 
 }
 
@@ -576,7 +611,12 @@ function generateInlineSnippet(){
 
     css += generateResponsiveCSS();
 
-    return "<!-- ベタガキ君で作成 -->\n<style>\n" + css + "</style>\n" + body;
+    /* CMSの改行→<br>変換に耐えるよう、全体を1行で出力する */
+
+    return "<!-- ベタガキ君で作成 --><style>" +
+        compactCss(css) +
+        "</style>" +
+        compactHtml(body);
 
 }
 
@@ -770,7 +810,8 @@ function ensureDialog(){
 
 <p class="pf-dialog-note">
 以下のコードをコピーして、CMSのHTML編集欄にそのまま貼り付けてください。<br>
-※スマホ対応（2列表示への組み替え等）のため、どちらの方式でも先頭に小さな&lt;style&gt;タグが含まれます。
+※スマホ対応のため先頭に小さな&lt;style&gt;タグが含まれます。<br>
+※CMSの「改行の自動変換」でレイアウトが崩れないよう、コードは改行なしの1行で出力されます（そのまま貼り付ければOKです）。
 </p>
 
 <div id="pfExportWarning">

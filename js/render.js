@@ -326,7 +326,7 @@ function generateBannerGrid(block){
 
     const imgRatio = ratioStyle(block);
 
-    let html = `<div class="banner-grid" style="display:grid;grid-template-columns:repeat(${columns},1fr);gap:${gap}px;">`;
+    let html = `<div class="banner-grid" style="display:grid;grid-template-columns:repeat(${columns},minmax(0,1fr));gap:${gap}px;">`;
 
     items.forEach((item,index)=>{
 

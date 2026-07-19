@@ -53,7 +53,15 @@ class ComponentRegistry {
     if(w >= 100){
       s += "width:100%;";
     }else{
-      s += "flex:0 1 " + w + "%;max-width:" + w + "%;";
+      /*
+        分数系(1/3・2/3)は 33/66 の整数だと 3枚並べても 99% で
+        右端が余る。実寸を 33.333/66.666 に補正して行をぴったり
+        埋める（合計 99.999%<100% なので折り返しは起きない）。
+        クラス名/データ属性は整数(bgk-w-33 等)のまま維持する。
+      */
+      const PCT = { 33:"33.333", 66:"66.666" };
+      const basis = PCT[w] || String(w);
+      s += "flex:0 1 " + basis + "%;max-width:" + basis + "%;";
     }
     /* レスポンシブ上書き（PC）はインラインで反映。tablet/mobile は
        出力時のメディアクエリで反映される（v1 と同じ方式） */
@@ -110,7 +118,7 @@ class ComponentRegistry {
           { key:"text", label:"本文", type:"textarea", group:"内容" }
         ],
         html(p){
-          return '<div style="padding:12px 24px;">'
+          return '<div style="padding:12px 8px;">'
             + '<h3 style="margin:0 0 8px 0;font-size:16px;border-left:4px solid #333333;padding-left:8px;font-weight:bold;color:inherit;">' + esc(p.title || defaultTitle) + '</h3>'
             + '<p style="margin:0;line-height:1.8;font-size:13px;color:inherit;">' + escBr(p.text || "") + '</p>'
             + '</div>';
@@ -157,7 +165,7 @@ class ComponentRegistry {
         ],
         html(p){
           const padY = parseInt(p.padY, 10) || 48;
-          return '<div style="padding:' + padY + 'px 24px;background-color:' + esc(p.bgColor || "#2a3143") + ';color:' + esc(p.textColor || "#ffffff") + ';text-align:' + (p.align || "center") + ';">'
+          return '<div style="margin:0 -16px;padding:' + padY + 'px 24px;background-color:' + esc(p.bgColor || "#2a3143") + ';color:' + esc(p.textColor || "#ffffff") + ';text-align:' + (p.align || "center") + ';">'
             + '<h1 style="margin:0;font-size:34px;line-height:1.4;font-weight:bold;color:inherit;">' + esc(p.title || "") + '</h1>'
             + (p.text ? '<p style="margin:12px 0 0 0;line-height:1.8;color:inherit;">' + escBr(p.text) + '</p>' : "")
             + '</div>';
@@ -191,7 +199,7 @@ class ComponentRegistry {
         ],
         html(p){
           const fs = parseInt(p.fontSize, 10) || 22;
-          return '<div style="padding:8px 24px;">'
+          return '<div style="padding:8px 8px;">'
             + '<h2 style="margin:0;line-height:1.5;font-weight:bold;font-size:' + fs + 'px;text-align:' + (p.align || "left") + ';color:inherit;' + headingDesign(p.design, esc(p.accent || "#bf0000")) + '">' + esc(p.text || "") + '</h2>'
             + '</div>';
         }
@@ -216,7 +224,7 @@ class ComponentRegistry {
         ],
         html(p){
           const fs = parseInt(p.fontSize, 10) || 14;
-          return '<div style="padding:12px 24px;">'
+          return '<div style="padding:12px 8px;">'
             + '<p style="margin:0;line-height:1.9;font-size:' + fs + 'px;color:' + esc(p.color || "#333333") + ';text-align:' + (p.align || "left") + ';">' + escBr(p.text || "") + '</p>'
             + '</div>';
         }
@@ -241,7 +249,7 @@ class ComponentRegistry {
           const mode = (ctx && ctx.mode) || "export";
           if(!p.src){
             if(mode === "canvas"){
-              return '<div style="margin:8px 24px;padding:36px 12px;border:2px dashed #c7cdd6;border-radius:6px;background:#f8f9fb;color:#8b94a2;font-size:12px;text-align:center;">画像URLをインスペクターで設定してください</div>';
+              return '<div style="margin:8px 8px;padding:36px 12px;border:2px dashed #c7cdd6;border-radius:6px;background:#f8f9fb;color:#8b94a2;font-size:12px;text-align:center;">画像URLをインスペクターで設定してください</div>';
             }
             return "";
           }
@@ -249,7 +257,7 @@ class ComponentRegistry {
           const inner = p.link
             ? '<a href="' + esc(p.link) + '" style="display:block;">' + img + '</a>'
             : img;
-          return '<div style="padding:8px 24px;">' + inner + '</div>';
+          return '<div style="padding:8px 8px;">' + inner + '</div>';
         }
       },
 
@@ -273,7 +281,7 @@ class ComponentRegistry {
           WIDTH_FIELD
         ],
         html(p){
-          return '<div style="padding:16px 24px;text-align:' + (p.align || "center") + ';">'
+          return '<div style="padding:16px 8px;text-align:' + (p.align || "center") + ';">'
             + '<a href="' + esc(p.link || "#") + '" style="display:inline-block;padding:14px 48px;background-color:' + esc(p.bgColor || "#bf0000") + ';color:' + esc(p.textColor || "#ffffff") + ';text-decoration:none;border-radius:4px;font-weight:bold;">' + esc(p.label || "") + '</a>'
             + '</div>';
         }
@@ -315,7 +323,7 @@ class ComponentRegistry {
             imagePart = '<div style="background:#eef0f3;border:1px dashed #c7cdd6;border-radius:4px;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;color:#8b94a2;font-size:11px;">画像未設定</div>';
           }
           /* min-width 指定により狭い画面では自動で縦積みになる */
-          return '<div style="padding:16px 24px;">'
+          return '<div style="padding:16px 8px;">'
             + '<div style="display:flex;flex-wrap:wrap;gap:16px;flex-direction:' + direction + ';align-items:flex-start;">'
             + '<div style="flex:1 1 260px;min-width:200px;">' + imagePart + '</div>'
             + '<div style="flex:1 1 300px;min-width:220px;">'
@@ -449,7 +457,7 @@ class ComponentRegistry {
             コンテナ幅に関係なく必ず N 列に収まる（v1 の教訓）。
             モバイルでは出力同梱のメディアクエリで 2 列に組み替わる。
           */
-          let html = '<div style="padding:12px 24px;">'
+          let html = '<div style="padding:12px 8px;">'
             + '<div class="bgk-grid" style="display:grid;grid-template-columns:repeat(' + cols + ',minmax(0,1fr));gap:' + gap + 'px;">';
           items.forEach((it, i) => {
             const isFeature = feature && i === 0;
@@ -507,7 +515,7 @@ class ComponentRegistry {
           if(isNaN(v)) v = 5;
           v = Math.max(1, Math.min(5, v));
           const stars = "★".repeat(v) + "☆".repeat(5 - v);
-          return '<div style="padding:12px 24px;">'
+          return '<div style="padding:12px 8px;">'
             + '<div style="color:#f5a623;font-size:18px;letter-spacing:2px;">' + stars + '</div>'
             + '<p style="margin:6px 0 0 0;line-height:1.8;color:inherit;">' + escBr(p.comment || "") + '</p>'
             + (p.author ? '<div style="margin-top:6px;font-size:12px;color:#888888;">' + esc(p.author) + ' さん</div>' : "")
@@ -536,8 +544,8 @@ class ComponentRegistry {
         ],
         html(p){
           const fs = parseInt(p.fontSize, 10) || 13;
-          return '<div style="padding:8px 24px;text-align:' + (p.align || "center") + ';">'
-            + '<span style="display:inline-block;padding:6px 16px;background-color:' + esc(p.bgColor || "#bf0000") + ';color:' + esc(p.textColor || "#ffffff") + ';font-size:' + fs + 'px;font-weight:bold;letter-spacing:1px;line-height:1;border-radius:2px;">' + esc(p.text || "期間限定") + '</span>'
+          return '<div style="padding:8px 8px;">'
+            + '<span style="display:block;padding:10px 16px;background-color:' + esc(p.bgColor || "#bf0000") + ';color:' + esc(p.textColor || "#ffffff") + ';font-size:' + fs + 'px;font-weight:bold;letter-spacing:1px;line-height:1.4;border-radius:2px;text-align:' + (p.align || "center") + ';">' + esc(p.text || "期間限定") + '</span>'
             + '</div>';
         }
       },
@@ -558,7 +566,7 @@ class ComponentRegistry {
           WIDTH_FIELD
         ],
         html(p){
-          return '<div style="padding:8px 24px;text-align:' + (p.align || "center") + ';">'
+          return '<div style="padding:8px 8px;text-align:' + (p.align || "center") + ';">'
             + '<span style="font-size:1.6em;font-weight:bold;">' + esc(p.amount || "") + '</span>' + esc(p.unit || "円")
             + '</div>';
         }
@@ -633,7 +641,7 @@ class CanvasController {
   }
 
   placeholderHtml(message){
-    return '<div style="margin:8px 24px;padding:24px 12px;border:2px dashed #c7cdd6;border-radius:6px;background:#f8f9fb;color:#8b94a2;font-size:12px;text-align:center;">' + message + '</div>';
+    return '<div style="margin:8px 8px;padding:24px 12px;border:2px dashed #c7cdd6;border-radius:6px;background:#f8f9fb;color:#8b94a2;font-size:12px;text-align:center;">' + message + '</div>';
   }
 
   syncSelection(){

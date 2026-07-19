@@ -441,6 +441,15 @@ input,select,textarea{
   align-items:stretch;
   align-content:flex-start;
   min-height:860px;
+  /*
+    ページ左右の基準ガター(16px)。各パーツの内側paddingは8pxで、
+    合計24pxが全パーツ共通の内容インセットになる。商品カード等の
+    幅指定パーツ(自前ガター8px)も外縁がこの16pxに乗って揃う。
+    ヒーローは負マージンでこのガターの外へ出て全幅背景を保つ。
+    ※export側 containerStyle() と必ず一致させること。
+  */
+  padding-left:16px;
+  padding-right:16px;
 }
 
 /* --- 空状態 --- */

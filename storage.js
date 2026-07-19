@@ -119,7 +119,14 @@ window.Betagaki.registerModule(function(ns){
      ========================================================== */
 
   function containerStyle(){
+    /*
+      左右16pxの基準ガター(canvasの .page-body と一致)。各パーツの
+      内側padding 8pxと合わせて全パーツ共通の内容インセット24pxになる。
+      box-sizing:border-box + .bgk-page自身へのリセットにより、
+      content-box系CMSでも外幅がはみ出さない。
+    */
     return "width:100%;max-width:1080px;box-sizing:border-box;margin:0 auto;"
+      + "padding-left:16px;padding-right:16px;"
       + "display:flex;flex-wrap:wrap;align-items:stretch;"
       + "font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;"
       + "color:#333333;line-height:1.7;";

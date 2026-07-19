@@ -1,731 +1,833 @@
-*{
-box-sizing:border-box;
+/* ============================================================
+   ベタガキ君 Studio — Design System
+   ライトテーマ / デザイントークン方式
+   落ち着いた業務ツール調（グラデーション・ネオン色は使わない）
+   ============================================================ */
+
+:root{
+  /* --- Color tokens --- */
+  --bg-app:#eef0f3;
+  --bg-panel:#ffffff;
+  --bg-elevated:#f5f6f8;
+  --bg-hover:#eceef2;
+  --border:#dfe3e9;
+  --border-strong:#c7cdd6;
+  --text-1:#22293a;
+  --text-2:#5b6472;
+  --text-3:#8b94a2;
+  --accent:#2b6cb8;
+  --accent-hover:#245b9c;
+  --accent-soft:rgba(43,108,184,.09);
+  --success:#2f9e63;
+  --danger:#c4453e;
+
+  /* --- Shape / elevation --- */
+  --radius-s:6px;
+  --radius-m:10px;
+  --radius-l:14px;
+  --shadow-1:0 1px 2px rgba(20,28,45,.07);
+  --shadow-2:0 10px 30px rgba(20,28,45,.14);
+
+  /* --- Motion --- */
+  --ease:cubic-bezier(.4,0,.2,1);
+  --speed:0.18s;
+  --speed-frame:0.35s;
+
+  /* --- Typography --- */
+  --font-ui:"Inter","Hiragino Kaku Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+}
+
+/* ============================================================
+   Reset / Base
+   ============================================================ */
+
+*,*::before,*::after{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html,body{
+  height:100%;
 }
 
 body{
-margin:0;
-font-family:"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
-background:#eef0f3;
-color:#333;
-}
-
-/* ==============================
-   toolbar
-============================== */
-
-.toolbar{
-height:56px;
-background:#1f2430;
-color:#fff;
-display:flex;
-align-items:center;
-padding:0 20px;
-gap:24px;
-}
-
-.toolbar h1{
-font-size:18px;
-margin:0;
-letter-spacing:1px;
-}
-
-.toolbar-buttons{
-display:flex;
-gap:16px;
-align-items:center;
-margin-left:auto;
-}
-
-.toolbar-group{
-display:flex;
-gap:6px;
-align-items:center;
-}
-
-.toolbar-group + .toolbar-group{
-border-left:1px solid #3a4152;
-padding-left:16px;
+  font-family:var(--font-ui);
+  font-size:13px;
+  color:var(--text-1);
+  background:var(--bg-app);
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
 }
 
 button{
-cursor:pointer;
-padding:8px 14px;
-border:1px solid #ccc;
-background:#fff;
-border-radius:4px;
-font-size:13px;
-transition:.15s;
+  font-family:inherit;
+  color:inherit;
+  background:none;
+  border:none;
+  cursor:pointer;
 }
 
-button:hover{
-opacity:.85;
+input,select,textarea{
+  font-family:inherit;
 }
 
-button:disabled{
-opacity:.35;
-cursor:default;
+/* ============================================================
+   App Shell Layout
+   ============================================================ */
+
+.app-shell{
+  display:grid;
+  height:100vh;
+  grid-template-rows:56px 1fr 30px;
+  grid-template-columns:268px 1fr 300px;
+  grid-template-areas:
+    "top top top"
+    "library stage inspector"
+    "status status status";
 }
 
-button.primary{
-background:#2f6fed;
-border-color:#2f6fed;
-color:#fff;
-font-weight:bold;
+/* ============================================================
+   Top Bar
+   ============================================================ */
+
+.top-bar{
+  grid-area:top;
+  display:flex;
+  align-items:center;
+  gap:24px;
+  padding:0 16px;
+  background:var(--bg-panel);
+  border-bottom:1px solid var(--border);
 }
 
-button.danger{
-background:#fff;
-border-color:#d9534f;
-color:#d9534f;
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:220px;
 }
 
-button.active{
-background:#2f6fed;
-border-color:#2f6fed;
-color:#fff;
+.brand-mark{
+  display:grid;
+  place-items:center;
+  width:30px;
+  height:30px;
+  border-radius:var(--radius-s);
+  background:#2a3143;
+  color:#fff;
+  font-weight:700;
+  font-size:15px;
 }
 
-/* ==============================
-   layout
-============================== */
+.brand-name{
+  font-size:15px;
+  font-weight:700;
+  letter-spacing:.02em;
+}
 
-.main{
-display:flex;
-height:calc(100vh - 56px);
+.brand-badge{
+  padding:2px 7px;
+  border-radius:99px;
+  background:var(--accent-soft);
+  color:var(--accent);
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.12em;
 }
 
-/* ==============================
-   sidebar
-============================== */
+/* --- Device segmented control --- */
 
-.sidebar{
-width:230px;
-background:#fff;
-border-right:1px solid #ddd;
-padding:15px;
-overflow:auto;
+.device-switch{
+  display:flex;
+  padding:3px;
+  gap:2px;
+  background:var(--bg-elevated);
+  border:1px solid var(--border);
+  border-radius:var(--radius-m);
+  margin-inline:auto;
 }
 
-.sidebar h3{
-margin:16px 0 8px;
-font-size:13px;
-color:#666;
+.device-option{
+  padding:6px 16px;
+  border-radius:7px;
+  font-size:12px;
+  color:var(--text-2);
+  transition:background var(--speed) var(--ease),color var(--speed) var(--ease),box-shadow var(--speed) var(--ease);
 }
 
-.sidebar h3:first-child{
-margin-top:0;
+.device-option:hover{
+  color:var(--text-1);
 }
 
-.part-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:6px;
+.device-option.is-active{
+  background:var(--bg-panel);
+  color:var(--text-1);
+  box-shadow:var(--shadow-1);
 }
 
-.part{
-margin:0;
-padding:12px 4px;
-font-size:12px;
-text-align:center;
-cursor:grab;
-background:#f7f8fa;
-border:1px solid #e0e3e8;
-}
+/* --- Action buttons --- */
 
-.part:hover{
-background:#eaf1ff;
-border-color:#2f6fed;
-opacity:1;
+.top-actions{
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
 
-.part:active{
-cursor:grabbing;
+.action-group{
+  display:flex;
+  gap:6px;
 }
 
-.pattern{
-margin:0;
-padding:12px 4px;
-font-size:12px;
-text-align:center;
-cursor:pointer;
-background:#fff6ec;
-border:1px solid #ecd9bd;
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  height:32px;
+  padding:0 14px;
+  border-radius:var(--radius-s);
+  background:var(--bg-panel);
+  border:1px solid var(--border-strong);
+  color:var(--text-1);
+  font-size:12px;
+  font-weight:600;
+  transition:background var(--speed) var(--ease),border-color var(--speed) var(--ease),transform var(--speed) var(--ease);
 }
 
-.pattern:hover{
-background:#ffedd6;
-border-color:#e0a44e;
-opacity:1;
+.btn:hover{
+  background:var(--bg-elevated);
 }
 
-.sidebar-hint{
-font-size:11px;
-color:#999;
-line-height:1.6;
-margin-top:14px;
+.btn:active{
+  transform:translateY(1px);
 }
 
-/* ==============================
-   workspace / canvas
-============================== */
+.btn:disabled{
+  opacity:.4;
+  cursor:default;
+  transform:none;
+}
 
-.workspace{
-flex:1;
-display:flex;
-justify-content:center;
-align-items:flex-start;
-padding:30px;
-overflow:auto;
+.btn-icon{
+  width:32px;
+  padding:0;
+  font-size:15px;
 }
 
-#canvas{
-background:#fff;
-min-height:1000px;
-transition:width .3s;
-box-shadow:0 2px 14px rgba(0,0,0,.12);
+.btn-primary{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#fff;
 }
 
-#canvas.preview-pc{
-width:1000px;
+.btn-primary:hover{
+  background:var(--accent-hover);
+  border-color:var(--accent-hover);
 }
 
-#canvas.preview-tablet{
-width:768px;
+.btn-danger{
+  border-color:rgba(196,69,62,.45);
+  color:var(--danger);
 }
 
-#canvas.preview-mobile{
-width:375px;
+.btn-danger:hover{
+  background:rgba(196,69,62,.07);
+  border-color:var(--danger);
 }
 
-/* ==============================
-   モバイルプレビュー・シミュレーション
-   （出力コードに同梱されるメディアクエリと同じ挙動を
-     キャンバス上で再現する。メディアクエリはビューポート
-     基準のためキャンバス幅では発火しない）
-============================== */
+/* ============================================================
+   Panels（共通）
+   ============================================================ */
 
-#canvas.preview-mobile .banner-grid{
-grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+.library-panel{
+  grid-area:library;
+  display:flex;
+  flex-direction:column;
+  background:var(--bg-panel);
+  border-right:1px solid var(--border);
+  min-height:0;
 }
 
-#canvas.preview-mobile .banner-item.feature{
-grid-column:1 / -1 !important;
+.inspector-panel{
+  grid-area:inspector;
+  display:flex;
+  flex-direction:column;
+  background:var(--bg-panel);
+  border-left:1px solid var(--border);
+  min-height:0;
 }
 
-#canvas.preview-mobile .pf-block[data-w="25"],
-#canvas.preview-mobile .pf-block[data-w="33"],
-#canvas.preview-mobile .pf-block[data-w="50"]{
-flex:0 1 50% !important;
-max-width:50% !important;
+.panel-header{
+  padding:14px 16px 10px;
 }
 
-#canvas.preview-mobile .pf-block[data-w="66"],
-#canvas.preview-mobile .pf-block[data-w="75"]{
-flex:0 1 100% !important;
-max-width:100% !important;
+.panel-title{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--text-3);
 }
+
+/* ============================================================
+   Component Library
+   ============================================================ */
 
-#canvas.preview-mobile .hero-block h1{
-font-size:26px;
+.library-search{
+  padding:0 12px 12px;
 }
 
-#canvas.preview-mobile .banner-price{
-font-size:15px;
+.library-search input{
+  width:100%;
+  height:32px;
+  padding:0 12px;
+  border-radius:var(--radius-s);
+  border:1px solid var(--border);
+  background:var(--bg-elevated);
+  color:var(--text-1);
+  font-size:12px;
+  outline:none;
+  transition:border-color var(--speed) var(--ease),background var(--speed) var(--ease);
 }
 
-.pf-canvas-empty{
-padding:120px 30px;
-text-align:center;
-color:#aaa;
-line-height:2.2;
-font-size:14px;
+.library-search input:focus{
+  border-color:var(--accent);
+  background:var(--bg-panel);
 }
 
-/* ==============================
-   section
-============================== */
+.library-search input::placeholder{
+  color:var(--text-3);
+}
 
-.pf-section{
-width:100%;
-position:relative;
-display:flex;
-flex-wrap:wrap;
-align-items:stretch;
+.library-body{
+  flex:1;
+  overflow-y:auto;
+  padding:0 12px;
+  min-height:0;
 }
 
-.pf-section:empty{
-min-height:60px;
-border:2px dashed #ccc;
+.library-group{
+  margin-bottom:18px;
 }
 
-.pf-section.selected-section{
-outline:2px dashed #2f6fed;
-outline-offset:-2px;
+.library-group-title{
+  font-size:11px;
+  font-weight:600;
+  color:var(--text-3);
+  margin-bottom:8px;
+  padding-left:2px;
 }
 
-.pf-section.drag-over-section{
-outline:2px solid #2f6fed;
-outline-offset:-2px;
-background:#f4f8ff;
+.library-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
 }
 
-/* ==============================
-   block
-============================== */
+.component-card{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  padding:12px 6px 10px;
+  border-radius:var(--radius-m);
+  background:var(--bg-panel);
+  border:1px solid var(--border);
+  cursor:grab;
+  transition:transform var(--speed) var(--ease),border-color var(--speed) var(--ease),box-shadow var(--speed) var(--ease);
+}
 
-.pf-block{
-position:relative;
-min-height:20px;
-cursor:move;
-transition:outline .15s;
-flex:0 0 100%;
-max-width:100%;
-box-sizing:border-box;
+.component-card:hover{
+  transform:translateY(-2px);
+  border-color:var(--accent);
+  box-shadow:var(--shadow-1);
 }
 
-.pf-block:not(.selected):hover{
-outline:1px dashed #9db9f0;
-outline-offset:1px;
+.component-card:active{
+  cursor:grabbing;
+  transform:translateY(0);
 }
 
-.pf-block.selected{
-outline:3px solid #2f6fed;
-outline-offset:1px;
+.component-icon{
+  display:grid;
+  place-items:center;
+  width:30px;
+  height:30px;
+  border-radius:var(--radius-s);
+  background:var(--bg-elevated);
+  color:var(--text-2);
+  font-size:14px;
+  font-weight:700;
+  transition:background var(--speed) var(--ease),color var(--speed) var(--ease);
 }
 
-.pf-block.drag-over{
-outline:3px dashed #2f6fed;
-outline-offset:-2px;
-background:#f4f8ff;
+.component-card:hover .component-icon{
+  background:var(--accent-soft);
+  color:var(--accent);
 }
 
-.pf-block.dragging{
-opacity:.5;
+.component-label{
+  font-size:11px;
+  color:var(--text-2);
 }
 
-.pf-block img{
-max-width:100%;
-height:auto;
+.component-card:hover .component-label{
+  color:var(--text-1);
 }
 
-.pf-image-placeholder{
-padding:40px 20px;
-background:#f0f2f5;
-color:#999;
-text-align:center;
-border:1px dashed #ccc;
-font-size:13px;
+.library-hint{
+  padding:10px 16px;
+  border-top:1px solid var(--border);
+  font-size:11px;
+  line-height:1.6;
+  color:var(--text-3);
 }
 
-/* ==============================
-   component style（キャンバス上の見た目）
-============================== */
+/* ============================================================
+   Canvas Stage
+   ============================================================ */
 
-.hero-block h1{
-margin:0 0 12px;
-font-size:34px;
-line-height:1.4;
+.canvas-stage{
+  grid-area:stage;
+  overflow:auto;
+  display:flex;
+  align-items:flex-start;
+  padding:36px 28px;
+  min-height:0;
+  background:
+    radial-gradient(circle,rgba(34,41,58,.07) 1px,transparent 1px) 0 0/22px 22px,
+    var(--bg-app);
 }
 
-.hero-block p{
-margin:0;
-line-height:1.8;
-}
+/*
+  ページフレーム:
+  デバイス切替時に width が滑らかに変化する（--speed-frame）。
+*/
 
-.heading-block{
-margin:0;
-line-height:1.5;
-font-size:inherit;
+/*
+  flex:0 0 auto — ステージ幅が足りなくても縮小させない（実寸プレビュー保証）。
+  margin-inline:auto — 余白があれば中央寄せ、オーバーフロー時は自動で
+  左寄せに解決され全域スクロール可能（justify-content:center だと
+  左端がスクロール到達不能になるため使わない）。
+*/
+.page-frame{
+  flex:0 0 auto;
+  margin-inline:auto;
+  width:1024px;
+  min-height:860px;
+  background:#ffffff;
+  color:#333333;
+  border:1px solid var(--border);
+  border-radius:var(--radius-s);
+  box-shadow:var(--shadow-2);
+  transition:width var(--speed-frame) var(--ease);
+  overflow:hidden;
 }
 
-.text-block{
-margin:0;
-line-height:1.9;
+.canvas-stage[data-device="tablet"] .page-frame{
+  width:768px;
 }
 
-.pf-button{
-display:inline-block;
-padding:14px 48px;
-background:#333;
-color:#fff;
-text-decoration:none;
-border-radius:4px;
-font-weight:bold;
+.canvas-stage[data-device="mobile"] .page-frame{
+  width:390px;
 }
 
-.product-card{
-border:1px solid #ddd;
-border-radius:6px;
-padding:20px;
-background:#fff;
-}
+/* --- ページ本体（ノードのフレックス行） --- */
 
-.product-card h3{
-margin:12px 0 8px;
-font-size:18px;
+.page-body{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:stretch;
+  align-content:flex-start;
+  min-height:860px;
 }
 
-.product-card p{
-margin:0 0 8px;
-line-height:1.7;
-}
+/* --- 空状態 --- */
 
-.product-price{
-font-size:22px;
-font-weight:bold;
-color:#c0392b;
+.frame-empty{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  min-height:860px;
+  color:#9aa3af;
 }
 
-.product-quantity{
-font-size:13px;
-color:#666;
+.frame-empty-icon{
+  display:grid;
+  place-items:center;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:#f1f3f6;
+  color:#8a93a3;
+  font-size:20px;
 }
 
-.price-block span{
-font-size:1.6em;
-font-weight:bold;
+.frame-empty-text{
+  font-size:13px;
+  line-height:2;
+  text-align:center;
 }
 
-.review-stars{
-color:#f5a623;
-font-size:18px;
-letter-spacing:2px;
-}
+/* --- キャンバス上のノード共通 --- */
 
-.review-block p{
-margin:6px 0 0;
-line-height:1.8;
+.canvas-node{
+  position:relative;
+  cursor:pointer;
+  outline:2px solid transparent;
+  outline-offset:-2px;
+  transition:outline-color var(--speed) var(--ease);
 }
 
-.producer-block h3,
-.notice-block h3,
-.shipping-block h3{
-margin:0 0 8px;
-font-size:16px;
-border-left:4px solid #333;
-padding-left:8px;
+.canvas-node:hover{
+  outline-color:rgba(43,108,184,.4);
 }
 
-.producer-block p,
-.notice-block p,
-.shipping-block p{
-margin:0;
-line-height:1.8;
+.canvas-node.is-selected{
+  outline-color:var(--accent);
 }
 
-.badge-block{
-font-weight:bold;
-letter-spacing:1px;
-line-height:1;
+.canvas-node.is-drop-target{
+  outline:2px dashed var(--accent);
+  background:var(--accent-soft);
 }
 
-.banner-item img{
-width:100%;
-height:auto;
-display:block;
+@keyframes node-enter{
+  from{
+    opacity:0;
+    transform:translateY(10px) scale(.985);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
 }
 
-.banner-caption{
-margin:6px 0 0;
-font-size:13px;
-line-height:1.5;
+.canvas-node.is-entering{
+  animation:node-enter .32s var(--ease);
 }
 
-.banner-price{
-margin:4px 0 0;
-font-size:18px;
-font-weight:bold;
-color:#bf0000;
-}
+/* --- モバイルプレビュー・シミュレーション ---
+   出力コードのメディアクエリと同じ組み替えをキャンバス上で再現する。
+   （メディアクエリはビューポート基準のためフレーム幅では発火しない） */
 
-.media-block h3{
-margin:0 0 8px;
-font-size:18px;
+.canvas-stage[data-device="mobile"] .canvas-node[data-w="25"],
+.canvas-stage[data-device="mobile"] .canvas-node[data-w="33"],
+.canvas-stage[data-device="mobile"] .canvas-node[data-w="50"]{
+  flex:0 1 50% !important;
+  max-width:50% !important;
 }
 
-.media-block p{
-margin:0;
-line-height:1.9;
+.canvas-stage[data-device="mobile"] .canvas-node[data-w="66"],
+.canvas-stage[data-device="mobile"] .canvas-node[data-w="75"]{
+  flex:0 1 100% !important;
+  max-width:100% !important;
 }
 
-.media-image img{
-width:100%;
-height:auto;
-display:block;
+.canvas-stage[data-device="mobile"] .bgk-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
 }
 
-/* ==============================
-   property panel
-============================== */
+/* ============================================================
+   Inspector
+   ============================================================ */
 
-.property{
-width:300px;
-background:#fff;
-border-left:1px solid #ddd;
-padding:15px;
-overflow:auto;
+.inspector-body{
+  flex:1;
+  overflow-y:auto;
+  padding:4px 16px 20px;
+  min-height:0;
 }
 
-.property h3{
-margin:0 0 10px;
-font-size:13px;
-color:#666;
+.inspector-empty{
+  padding:36px 8px;
+  font-size:12px;
+  line-height:2;
+  text-align:center;
+  color:var(--text-3);
 }
 
-.property h4{
-margin:4px 0 8px;
-font-size:12px;
-color:#888;
+.inspector-type{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 0 4px;
 }
 
-.property hr{
-border:none;
-border-top:1px solid #eee;
-margin:14px 0;
+.inspector-type-name{
+  font-size:13px;
+  font-weight:700;
 }
 
-.property label{
-display:block;
-font-size:12px;
-color:#555;
-margin-bottom:4px;
+.field-group{
+  padding:14px 0;
+  border-bottom:1px solid var(--border);
 }
 
-.property input,
-.property textarea,
-.property select{
-width:100%;
-padding:8px;
-margin-bottom:10px;
-border:1px solid #ccc;
-border-radius:4px;
-font-size:13px;
+.field-group-title{
+  font-size:11px;
+  font-weight:700;
+  color:var(--text-3);
+  margin-bottom:10px;
 }
 
-.property textarea{
-min-height:70px;
-resize:vertical;
+.field-row{
+  margin-bottom:10px;
 }
 
-.prop-header{
-display:flex;
-align-items:center;
-justify-content:space-between;
-margin-bottom:12px;
+.field-label{
+  display:block;
+  font-size:11px;
+  color:var(--text-2);
+  margin-bottom:5px;
 }
 
-.prop-type{
-font-weight:bold;
-font-size:14px;
+.field-input,
+.field-select,
+.field-textarea{
+  width:100%;
+  padding:7px 10px;
+  border-radius:var(--radius-s);
+  border:1px solid var(--border);
+  background:var(--bg-panel);
+  color:var(--text-1);
+  font-size:12px;
+  outline:none;
+  transition:border-color var(--speed) var(--ease);
 }
 
-.prop-actions{
-display:flex;
-gap:6px;
+.field-input:focus,
+.field-select:focus,
+.field-textarea:focus{
+  border-color:var(--accent);
 }
 
-.prop-actions button{
-padding:5px 10px;
-font-size:12px;
+.field-textarea{
+  min-height:72px;
+  resize:vertical;
+  line-height:1.7;
 }
 
-.panel-hint{
-font-size:11px;
-color:#999;
-line-height:1.6;
-margin:0 0 10px;
+.field-color{
+  width:100%;
+  height:32px;
+  padding:2px;
+  border-radius:var(--radius-s);
+  border:1px solid var(--border);
+  background:var(--bg-panel);
+  cursor:pointer;
 }
 
-.prop-item{
-border:1px solid #e4e7ec;
-border-radius:4px;
-padding:10px;
-margin-bottom:10px;
-background:#fafbfc;
+.field-pair{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
 }
 
-.prop-item-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:8px;
-font-size:12px;
-color:#666;
-font-weight:bold;
+.field-actions{
+  display:flex;
+  gap:8px;
+  padding-top:14px;
 }
 
-.prop-item-header button{
-padding:3px 8px;
-font-size:11px;
+.field-actions .btn{
+  flex:1;
 }
 
-#propAddItem{
-width:100%;
-margin-bottom:4px;
+/* --- バナーグリッドのアイテム編集 --- */
+
+.item-card{
+  padding:10px;
+  margin-bottom:10px;
+  border:1px solid var(--border);
+  border-radius:var(--radius-s);
+  background:var(--bg-elevated);
 }
 
-/* section control */
+.item-card-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:8px;
+}
 
-#btnAddSection,
-#btnDuplicateSection,
-#btnMoveSectionUp,
-#btnMoveSectionDown,
-#btnDeleteSection{
-width:100%;
-margin-bottom:6px;
+.item-card-title{
+  font-size:11px;
+  font-weight:700;
+  color:var(--text-2);
 }
 
-/* ==============================
-   toast
-============================== */
+.item-remove{
+  font-size:11px;
+  color:var(--danger);
+  padding:2px 8px;
+  border-radius:4px;
+  border:1px solid transparent;
+}
 
-#pfToast{
-position:fixed;
-left:50%;
-bottom:32px;
-transform:translateX(-50%) translateY(20px);
-background:#1f2430;
-color:#fff;
-padding:10px 24px;
-border-radius:20px;
-font-size:13px;
-opacity:0;
-pointer-events:none;
-transition:.25s;
-z-index:1000;
+.item-remove:hover{
+  border-color:var(--danger);
 }
 
-#pfToast.show{
-opacity:1;
-transform:translateX(-50%) translateY(0);
+.item-add{
+  width:100%;
 }
 
-/* ==============================
-   export dialog
-============================== */
+/* ============================================================
+   Status Bar
+   ============================================================ */
 
-#pfExportOverlay{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.5);
-display:none;
-align-items:center;
-justify-content:center;
-z-index:900;
+.status-bar{
+  grid-area:status;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:0 16px;
+  background:var(--bg-panel);
+  border-top:1px solid var(--border);
+  font-size:11px;
+  color:var(--text-3);
 }
 
-.pf-dialog{
-background:#fff;
-width:680px;
-max-width:92vw;
-max-height:86vh;
-border-radius:8px;
-padding:22px;
-display:flex;
-flex-direction:column;
-gap:12px;
+.status-spacer{
+  flex:1;
 }
 
-.pf-dialog h3{
-margin:0;
-font-size:16px;
-}
+/* ============================================================
+   Modal
+   ============================================================ */
 
-.pf-mode-toggle{
-display:flex;
-gap:0;
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(24,32,48,.42);
+  backdrop-filter:blur(2px);
+  z-index:100;
 }
 
-.pf-mode-toggle button{
-flex:1;
-border-radius:0;
-border-color:#c9ced6;
-background:#f2f4f7;
-color:#555;
+.modal-overlay.is-open{
+  display:flex;
 }
 
-.pf-mode-toggle button:first-child{
-border-radius:4px 0 0 4px;
+.modal{
+  width:660px;
+  max-width:92vw;
+  max-height:84vh;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  padding:20px;
+  border-radius:var(--radius-l);
+  background:var(--bg-panel);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-2);
+  animation:node-enter .25s var(--ease);
 }
 
-.pf-mode-toggle button:last-child{
-border-radius:0 4px 4px 0;
-border-left:none;
+.modal-title{
+  font-size:14px;
+  font-weight:700;
 }
 
-.pf-mode-toggle button.active{
-background:#2f6fed;
-border-color:#2f6fed;
-color:#fff;
-font-weight:bold;
+.modal-note{
+  font-size:11px;
+  line-height:1.8;
+  color:var(--text-2);
 }
 
-.pf-dialog-note{
-margin:0;
-font-size:12px;
-color:#666;
-line-height:1.7;
+.modal-code{
+  width:100%;
+  height:280px;
+  padding:12px;
+  border-radius:var(--radius-s);
+  border:1px solid var(--border);
+  background:var(--bg-elevated);
+  color:var(--text-1);
+  font-family:"JetBrains Mono",Consolas,monospace;
+  font-size:11px;
+  line-height:1.6;
+  resize:vertical;
+  white-space:pre;
 }
 
-#pfExportWarning{
-display:none;
-font-size:12px;
-color:#a94442;
-background:#fdf3f2;
-border:1px solid #eccfcd;
-border-radius:4px;
-padding:8px 12px;
-line-height:1.6;
+.modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
 }
 
-#pfExportCode{
-width:100%;
-height:300px;
-font-family:Consolas,Monaco,monospace;
-font-size:12px;
-border:1px solid #ccc;
-border-radius:4px;
-padding:10px;
-resize:vertical;
-white-space:pre;
-}
+/* ============================================================
+   Toast
+   ============================================================ */
 
-.pf-dialog-buttons{
-display:flex;
-justify-content:flex-end;
-gap:8px;
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:44px;
+  transform:translateX(-50%) translateY(16px);
+  padding:9px 22px;
+  border-radius:99px;
+  background:#2a3143;
+  color:#fff;
+  font-size:12px;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s var(--ease),transform .25s var(--ease);
+  z-index:200;
 }
 
-/* ==============================
-   responsive（エディタ自体）
-============================== */
+.toast.is-visible{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
 
-@media(max-width:1024px){
+/* ============================================================
+   Scrollbars
+   ============================================================ */
 
-.sidebar{
-width:180px;
+::-webkit-scrollbar{
+  width:10px;
+  height:10px;
 }
 
-.property{
-width:260px;
+::-webkit-scrollbar-track{
+  background:transparent;
 }
 
+::-webkit-scrollbar-thumb{
+  background:var(--border-strong);
+  border-radius:99px;
+  border:2px solid transparent;
+  background-clip:content-box;
 }
 
-@media(max-width:768px){
-
-.toolbar{
-height:auto;
-flex-wrap:wrap;
-padding:10px;
+::-webkit-scrollbar-thumb:hover{
+  background:var(--text-3);
+  background-clip:content-box;
 }
 
-.sidebar{
-display:none;
-}
+/* ============================================================
+   Editor Responsive（エディタ自体の縮小時）
+   ============================================================ */
 
-.property{
-display:none;
+@media(max-width:1280px){
+  .app-shell{
+    grid-template-columns:232px 1fr 272px;
+  }
 }
 
+@media(max-width:1080px){
+  .brand-name,
+  .brand-badge{
+    display:none;
+  }
+  .brand{
+    min-width:auto;
+  }
 }

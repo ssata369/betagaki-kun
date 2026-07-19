@@ -1,200 +1,200 @@
 <!DOCTYPE html>
-<html lang="ja">
-
+<html lang="ja" data-theme="light">
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>ベタガキ君</title>
-
+<title>ベタガキ君 Studio</title>
 <link rel="stylesheet" href="style.css">
-
 </head>
-
 <body>
 
-<header class="toolbar">
+<div class="app-shell">
 
-<h1>ベタガキ君</h1>
+  <!-- ================= Top Bar ================= -->
+  <header class="top-bar">
 
-<div class="toolbar-buttons">
+    <div class="brand">
+      <span class="brand-mark">B</span>
+      <span class="brand-name">ベタガキ君</span>
+      <span class="brand-badge">STUDIO</span>
+    </div>
 
-<div class="toolbar-group">
-<button id="btnSave" title="プロジェクトをファイルに保存 (Ctrl+S)">保存</button>
-<button id="btnLoad" title="プロジェクトファイルを読込">読込</button>
-<button id="btnClearAll" class="danger" title="すべてのパーツを削除して初期化">全削除</button>
+    <nav class="device-switch" aria-label="プレビューデバイス切替">
+      <button class="device-option is-active" data-device="desktop">PC</button>
+      <button class="device-option" data-device="tablet">タブレット</button>
+      <button class="device-option" data-device="mobile">スマホ</button>
+    </nav>
+
+    <div class="top-actions">
+      <div class="action-group">
+        <button class="btn btn-icon" data-action="undo" title="元に戻す (Ctrl+Z)" disabled>↶</button>
+        <button class="btn btn-icon" data-action="redo" title="やり直す (Ctrl+Shift+Z)" disabled>↷</button>
+      </div>
+      <div class="action-group">
+        <button class="btn" data-action="import">読込</button>
+        <button class="btn" data-action="save">保存</button>
+        <button class="btn" data-action="images">画像</button>
+      </div>
+      <div class="action-group">
+        <button class="btn btn-danger" data-action="clear" title="すべてのパーツを削除して初期化">全削除</button>
+      </div>
+      <button class="btn btn-primary" data-action="export">コード出力</button>
+    </div>
+
+  </header>
+
+  <!-- ================= Component Library ================= -->
+  <aside class="library-panel">
+
+    <div class="panel-header">
+      <h2 class="panel-title">コンポーネント</h2>
+    </div>
+
+    <div class="library-search">
+      <input type="search" id="librarySearch" placeholder="検索…" autocomplete="off" spellcheck="false">
+    </div>
+
+    <div class="library-body" id="libraryBody">
+
+      <section class="library-group" data-group="patterns">
+        <h3 class="library-group-title">レイアウトパターン</h3>
+        <div class="library-grid">
+          <button class="component-card" data-pattern="ranking">
+            <span class="component-icon">①</span>
+            <span class="component-label">ランキング</span>
+          </button>
+          <button class="component-card" data-pattern="bannerFeature">
+            <span class="component-icon">◩</span>
+            <span class="component-label">バナー特集</span>
+          </button>
+          <button class="component-card" data-pattern="mediaShowcase">
+            <span class="component-icon">▥</span>
+            <span class="component-label">商品紹介(左右)</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="library-group" data-group="basic">
+        <h3 class="library-group-title">基本</h3>
+        <div class="library-grid">
+          <button class="component-card" data-component="hero" draggable="true">
+            <span class="component-icon">▤</span>
+            <span class="component-label">ヒーロー</span>
+          </button>
+          <button class="component-card" data-component="heading" draggable="true">
+            <span class="component-icon">H</span>
+            <span class="component-label">見出し</span>
+          </button>
+          <button class="component-card" data-component="text" draggable="true">
+            <span class="component-icon">¶</span>
+            <span class="component-label">テキスト</span>
+          </button>
+          <button class="component-card" data-component="image" draggable="true">
+            <span class="component-icon">◫</span>
+            <span class="component-label">画像</span>
+          </button>
+          <button class="component-card" data-component="button" draggable="true">
+            <span class="component-icon">▣</span>
+            <span class="component-label">ボタン</span>
+          </button>
+          <button class="component-card" data-component="media" draggable="true">
+            <span class="component-icon">▧</span>
+            <span class="component-label">画像+テキスト</span>
+          </button>
+          <button class="component-card" data-component="spacer" draggable="true">
+            <span class="component-icon">↕</span>
+            <span class="component-label">スペーサー</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="library-group" data-group="commerce">
+        <h3 class="library-group-title">コマース</h3>
+        <div class="library-grid">
+          <button class="component-card" data-component="productCard" draggable="true">
+            <span class="component-icon">◨</span>
+            <span class="component-label">商品カード</span>
+          </button>
+          <button class="component-card" data-component="bannerGrid" draggable="true">
+            <span class="component-icon">▦</span>
+            <span class="component-label">バナーグリッド</span>
+          </button>
+          <button class="component-card" data-component="review" draggable="true">
+            <span class="component-icon">★</span>
+            <span class="component-label">レビュー</span>
+          </button>
+          <button class="component-card" data-component="badge" draggable="true">
+            <span class="component-icon">◆</span>
+            <span class="component-label">バッジ</span>
+          </button>
+          <button class="component-card" data-component="price" draggable="true">
+            <span class="component-icon">¥</span>
+            <span class="component-label">価格</span>
+          </button>
+          <button class="component-card" data-component="notice" draggable="true">
+            <span class="component-icon">!</span>
+            <span class="component-label">注意事項</span>
+          </button>
+          <button class="component-card" data-component="shipping" draggable="true">
+            <span class="component-icon">⇨</span>
+            <span class="component-label">配送情報</span>
+          </button>
+          <button class="component-card" data-component="producer" draggable="true">
+            <span class="component-icon">◉</span>
+            <span class="component-label">生産者紹介</span>
+          </button>
+        </div>
+      </section>
+
+    </div>
+
+    <p class="library-hint">クリックまたはドラッグでキャンバスへ追加</p>
+
+  </aside>
+
+  <!-- ================= Canvas Stage ================= -->
+  <main class="canvas-stage" id="canvasStage" data-device="desktop">
+    <div class="page-frame" id="pageFrame">
+      <div class="frame-empty" id="frameEmpty">
+        <div class="frame-empty-icon">✦</div>
+        <p class="frame-empty-text">
+          左のコンポーネントをクリック、<br>
+          またはここへドラッグしてページ作成を始めましょう
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= Inspector ================= -->
+  <aside class="inspector-panel">
+    <div class="panel-header">
+      <h2 class="panel-title">インスペクター</h2>
+    </div>
+    <div class="inspector-body" id="inspectorBody">
+      <div class="inspector-empty">
+        コンポーネントを選択すると、<br>ここに編集項目が表示されます
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= Status Bar ================= -->
+  <footer class="status-bar">
+    <span id="statusDevice">PC — 1024px</span>
+    <span class="status-spacer"></span>
+    <span id="statusAutosave">自動保存: 待機中</span>
+  </footer>
+
 </div>
 
-<div class="toolbar-group">
-<button id="btnExportCode" class="primary" title="CMSに貼り付けられるコードを出力">コード出力</button>
-<button id="btnExportHtml" title="単体で動くHTMLファイルを出力">HTML出力</button>
-</div>
-
-<div class="toolbar-group">
-<button id="btnUndo" title="元に戻す (Ctrl+Z)">↶ 戻る</button>
-<button id="btnRedo" title="やり直す (Ctrl+Y)">↷ 進む</button>
-</div>
-
-<div class="toolbar-group">
-<button id="devicePC">PC</button>
-<button id="deviceTablet">Tablet</button>
-<button id="deviceMobile">Mobile</button>
-</div>
-
-</div>
-
-</header>
-
-<div class="main">
-
-<aside class="sidebar">
-
-<h3>レイアウトパターン</h3>
-
-<div class="part-grid">
-
-<button class="pattern" data-pattern="ranking">ランキング</button>
-
-<button class="pattern" data-pattern="bannerFeature">バナー特集</button>
-
-<button class="pattern" data-pattern="mediaShowcase">商品紹介(左右)</button>
-
-</div>
-
-<h3>基本パーツ</h3>
-
-<div class="part-grid">
-
-<button class="part" data-type="hero">ヒーロー</button>
-
-<button class="part" data-type="heading">見出し</button>
-
-<button class="part" data-type="text">テキスト</button>
-
-<button class="part" data-type="image">画像</button>
-
-<button class="part" data-type="button">ボタン</button>
-
-<button class="part" data-type="media">画像＋テキスト</button>
-
-</div>
-
-<h3>LP・ECパーツ</h3>
-
-<div class="part-grid">
-
-<button class="part" data-type="bannerGrid">バナー一覧</button>
-
-<button class="part" data-type="product">商品カード</button>
-
-<button class="part" data-type="price">価格</button>
-
-<button class="part" data-type="review">レビュー</button>
-
-<button class="part" data-type="badge">バッジ</button>
-
-<button class="part" data-type="notice">注意事項</button>
-
-<button class="part" data-type="shipping">配送情報</button>
-
-<button class="part" data-type="producer">生産者紹介</button>
-
-</div>
-
-<p class="sidebar-hint">クリックで追加、またはキャンバスへドラッグ＆ドロップ</p>
-
-</aside>
-
-<main class="workspace">
-
-<div id="canvas">
-
-</div>
-
-</main>
-
-<aside class="property">
-
-<h3>プロパティ</h3>
-
-<div id="propertyPanel">
-
-パーツを選択してください
-
-</div>
-
-<hr>
-
-<h3>セクション管理</h3>
-
-<button id="btnAddSection">＋追加</button>
-
-<button id="btnDuplicateSection">複製</button>
-
-<button id="btnMoveSectionUp">↑上へ</button>
-
-<button id="btnMoveSectionDown">↓下へ</button>
-
-<button id="btnDeleteSection">削除</button>
-
-<hr>
-
-<div id="responsiveSetting">
-
-</div>
-
-<hr>
-
-<h3>ページ設定</h3>
-
-<div id="pageSetting">
-
-</div>
-
-</aside>
-
-</div>
-
-<script src="js/state.js"></script>
-
-<script src="js/utils.js"></script>
-
-<script src="js/section.js"></script>
-
-<script src="js/sidebar.js"></script>
-
-<script src="js/render.js"></script>
-
-<script src="js/property.js"></script>
-
-<script src="js/drag.js"></script>
-
-<script src="js/patterns.js"></script>
-
-<script src="js/device.js"></script>
-
-<script src="js/template.js"></script>
-
-<script src="js/responsiveEditor.js"></script>
-
-<script src="js/preview.js"></script>
-
-<script src="js/imageManager.js"></script>
-
-<script src="js/history.js"></script>
-
-<script src="js/autosave.js"></script>
-
-<script src="js/project.js"></script>
-
-<script src="js/seo.js"></script>
-
-<script src="js/exporter.js"></script>
-
-<script src="app.js"></script>
+<!--
+  スクリプトは type="module" ではなく defer の通常読込を採用。
+  file:// 直開きでも動作させるため（ES Modules は file:// で CORS 制限を受ける）。
+  各ファイルはクラスベースのモジュール構造を持ち、グローバル汚染は
+  名前空間 window.Betagaki のみに限定する。
+-->
+<script src="app.js" defer></script>
+<script src="editor.js" defer></script>
+<script src="storage.js" defer></script>
 
 </body>
-
 </html>

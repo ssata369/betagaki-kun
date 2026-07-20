@@ -58,8 +58,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\.claude\serve.ps1
 
 ## ライセンス・著作権
 
-本ソフトウェアは、作者（ssata369）が業務時間外に個人所有の機材および
-個人契約のサービスを用いて開発した**個人著作物**です。
+本ソフトウェアは、作者（ssata369）が個人契約のサービスを用いて開発した**個人著作物**です。
 
 Copyright (c) 2026 ssata369 — All rights reserved.
 

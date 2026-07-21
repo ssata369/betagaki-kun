@@ -248,6 +248,20 @@ window.Betagaki.registerModule(function(ns){
     スコープリセット（.bgk-page h1 = 0,1,1）に order 非依存で勝たせる。
     ※ 生成 HTML では class が style の直前に来る前提の変換
   */
+  /*
+    style 属性から <style> ブロックへ移すときは HTML 実体参照を戻す。
+    <style> の中身は生テキスト扱いで実体参照が解釈されないため、
+    背景画像URLのクエリ区切り & (属性内では &amp;) をそのまま置くと
+    URL が壊れる。&amp; は二重復号を避けるため最後に処理する。
+  */
+  function decodeEntities(value){
+    return value
+      .replace(/&quot;/g, '"')
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&amp;/g, "&");
+  }
+
   function toStylesheet(bodyHtml){
     const rules = [];
     const map = Object.create(null);
@@ -257,7 +271,7 @@ window.Betagaki.registerModule(function(ns){
       if(!c){
         c = "bgk-c-" + (seq++);
         map[style] = c;
-        rules.push(".bgk-page." + c + ",.bgk-page ." + c + "{" + style + "}");
+        rules.push(".bgk-page." + c + ",.bgk-page ." + c + "{" + decodeEntities(style) + "}");
       }
       return ' class="' + (cls ? cls + " " : "") + c + '"';
     });

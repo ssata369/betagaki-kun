@@ -104,6 +104,19 @@ class ComponentRegistry {
       return "";
     }
 
+    /*
+      CSS の url('...') 内へ URL を安全に埋め込む。
+      style 属性の中なので esc で " などを実体参照にしたうえで、
+      CSS 文字列を終端させてしまう ' とバックスラッシュ、
+      空白をパーセントエンコードする。
+    */
+    function cssUrl(src){
+      return esc(String(src).trim())
+        .replace(/\\/g, "%5C")
+        .replace(/'/g, "%27")
+        .replace(/\s/g, "%20");
+    }
+
     function imgTag(src, alt, extra){
       return '<img src="' + esc(src) + '" alt="' + esc(alt || "") + '" style="width:100%;max-width:100%;height:auto;display:block;' + (extra || "") + '">';
     }
@@ -150,6 +163,7 @@ class ComponentRegistry {
         defaults: {
           title: "見出しキャッチコピー",
           text: "サブテキストをここに入力します。",
+          image: "",
           bgColor: "#2a3143",
           textColor: "#ffffff",
           align: "center",
@@ -158,6 +172,10 @@ class ComponentRegistry {
         fields: [
           { key:"title", label:"タイトル", type:"text", group:"内容" },
           { key:"text", label:"サブテキスト", type:"textarea", group:"内容" },
+          /* キー名は image 固定。画像管理の「使用」ボタンと
+             出力時のデータURL→本番URL置換(resolveProps)が
+             src / image のキーを見て動作するため。 */
+          { key:"image", label:"背景画像URL", type:"text", group:"内容" },
           { key:"bgColor", label:"背景色", type:"color", group:"スタイル" },
           { key:"textColor", label:"文字色", type:"color", group:"スタイル" },
           ALIGN_FIELD,
@@ -165,7 +183,16 @@ class ComponentRegistry {
         ],
         html(p){
           const padY = parseInt(p.padY, 10) || 48;
-          return '<div style="margin:0 -16px;padding:' + padY + 'px 24px;background-color:' + esc(p.bgColor || "#2a3143") + ';color:' + esc(p.textColor || "#ffffff") + ';text-align:' + (p.align || "center") + ';">'
+          /*
+            背景色は常に敷く（画像の読込前・透過部分の下地になる）。
+            画像は cover / center で全面に敷き詰める（v1 と同じ挙動）。
+          */
+          let bg = "background-color:" + esc(p.bgColor || "#2a3143") + ";";
+          if(p.image){
+            bg += "background-image:url('" + cssUrl(p.image) + "');"
+              + "background-size:cover;background-position:center;background-repeat:no-repeat;";
+          }
+          return '<div style="margin:0 -16px;padding:' + padY + 'px 24px;' + bg + 'color:' + esc(p.textColor || "#ffffff") + ';text-align:' + (p.align || "center") + ';">'
             + '<h1 style="margin:0;font-size:34px;line-height:1.4;font-weight:bold;color:inherit;">' + esc(p.title || "") + '</h1>'
             + (p.text ? '<p style="margin:12px 0 0 0;line-height:1.8;color:inherit;">' + escBr(p.text) + '</p>' : "")
             + '</div>';
